@@ -41,9 +41,4 @@ class Controller:
         model.session.add(new_exhibit)
         model.session.commit()
         model.session.close()
-
-
-
-
-    
-    
+        

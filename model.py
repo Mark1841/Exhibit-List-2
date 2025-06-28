@@ -23,10 +23,22 @@ class Exhibit(Base):
     seal_number = Column(String)
     seal_date_time = Column(String)
 
+    # The last entry is for linking this table to the continuities table
+    continuities = relationship("Continuity", back_populates="exhibits")
+
 # Define continuity class
 class Continuity(Base):
     """ This class creates the continuity data model and links to the continuity table """
-    pass # Code to go here to define the continuity table and link to exhibit table
+    __tablename__ = "continuities"
+    id = Column(Integer, primary_key=True)
+    xfer_from = Column(String)
+    xfer_to = Column(String)
+    xfer_date_time = Column(String)
+    
+    # The last two entries are for linking this table to the exhibits table
+    exhibit_id = Column(Integer, ForeignKey('exhibits.id'))
+    exhibits = relationship("Exhibit", back_populates="continuities")
+
 
 # Database set up
 engine = create_engine('sqlite:///exhibitList.db', echo = False)
