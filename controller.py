@@ -1,6 +1,7 @@
 from view import MainWindow, AddExhibitWindow, AddContinuityWindow
 from model import Exhibit
 import model
+from sqlalchemy import select
 
 class Controller:
     """ The controller takes care of the application logic """
@@ -13,6 +14,7 @@ class Controller:
 
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
+        self.add_continuity_view.button_exhibit_number_check.clicked.connect(self.query_exhibits)
         self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
         self.main_view.button_add_continuity.clicked.connect(self.show_add_continuity_form)
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
@@ -47,4 +49,15 @@ class Controller:
         model.session.add(new_exhibit)
         model.session.commit()
         model.session.close()
+
+    def query_exhibits(self):
+        exhibit_to_find = self.add_continuity_view.textbox_continuity_exhibit_number.text()
+        exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_to_find).first()
+        if exhibit == None:
+            self.add_continuity_view.label_confirm_exhibit.setText('That exhibit is not in the database')
+            self.add_continuity_view.textbox_continuity_exhibit_number.clear()
+        else:
+            self.add_continuity_view.label_confirm_exhibit.setText(f'{exhibit.property_tag} - {exhibit.description}')
+        model.session.close()
+
         
