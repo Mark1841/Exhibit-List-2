@@ -113,4 +113,45 @@ class AddExhibitWindow(QWidget):
         add_exhibit_layout.addRow(self.button_add_exhibit_okay, self.button_add_exhibit_next)
         add_exhibit_layout.addRow(self.button_add_exhibit_cancel)
         
+        # Set the layout for the widget
         self.setLayout(add_exhibit_layout)
+
+class AddContinuityWindow(QWidget):
+    """ This class creates the add continuity window """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+         # Set main window
+        self.setWindowTitle('Add Continuity')
+        self.setStyleSheet("QPushButton {min-Width: 100px; min-height: 40px; }")
+
+        # Create exhibits for continuity window
+        # Labels
+        self.label_exhibit_number = QLabel('Enter Exhibit Number')
+        self.label_xfer_from = QLabel('Transfer from')
+        self.label_xfer_to = QLabel('Transfer from')
+        self.label_xfer_date = QLabel('Transfer Date')
+        self.label_xfer_time = QLabel('Transfer Time')
+        # Line Edit Boxes
+        self.textbox_continuity_exhibit_number = QLineEdit()
+        self.textbox_xfer_from = QLineEdit()
+        self.textbox_xfer_to = QLineEdit()
+        self.textbox_xfer_date = QLineEdit()
+        self.textbox_xfer_time = QLineEdit()
+        # Buttons
+        self.button_exhibit_number_check = QPushButton('Check')
+        self.button_add_continuity = QPushButton('Add Continuity')
+        self.button_add_continuity_cancel = QPushButton('Cancel')
+
+        # Create add continuity window layout and add widgets
+        add_continuity_layout = QFormLayout()
+        add_continuity_layout.addRow(self.label_exhibit_number, self.textbox_continuity_exhibit_number)
+        add_continuity_layout.addRow(self.button_exhibit_number_check)
+        add_continuity_layout.addRow(self.label_xfer_from, self.textbox_xfer_from)
+        add_continuity_layout.addRow(self.label_xfer_to, self.textbox_xfer_to)
+        add_continuity_layout.addRow(self.label_xfer_date, self.textbox_xfer_date)
+        add_continuity_layout.addRow(self.label_xfer_time, self.textbox_xfer_time)
+        add_continuity_layout.addRow(self.button_add_continuity, self.button_add_continuity_cancel)
+
+        # Set the layout for the widget
+        self.setLayout(add_continuity_layout)

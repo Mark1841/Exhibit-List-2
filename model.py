@@ -24,7 +24,7 @@ class Exhibit(Base):
     seal_date_time = Column(String)
 
     # The last entry is for linking this table to the continuities table
-    continuities = relationship("Continuity", back_populates="exhibits")
+    continuities = relationship("Continuity", back_populates="exhibits", cascade="all, delete-orphan")
 
 # Define continuity class
 class Continuity(Base):
