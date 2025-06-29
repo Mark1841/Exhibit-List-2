@@ -128,6 +128,7 @@ class AddContinuityWindow(QWidget):
         # Create exhibits for continuity window
         # Labels
         self.label_exhibit_number = QLabel('Enter Exhibit Number')
+        self.label_confirm_exhibit = QLabel('')
         self.label_xfer_from = QLabel('Transfer from')
         self.label_xfer_to = QLabel('Transfer from')
         self.label_xfer_date = QLabel('Transfer Date')
@@ -147,6 +148,7 @@ class AddContinuityWindow(QWidget):
         add_continuity_layout = QFormLayout()
         add_continuity_layout.addRow(self.label_exhibit_number, self.textbox_continuity_exhibit_number)
         add_continuity_layout.addRow(self.button_exhibit_number_check)
+        add_continuity_layout.addRow(self.label_confirm_exhibit)
         add_continuity_layout.addRow(self.label_xfer_from, self.textbox_xfer_from)
         add_continuity_layout.addRow(self.label_xfer_to, self.textbox_xfer_to)
         add_continuity_layout.addRow(self.label_xfer_date, self.textbox_xfer_date)
