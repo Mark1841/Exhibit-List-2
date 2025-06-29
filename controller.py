@@ -56,6 +56,7 @@ class Controller:
         self.clear_form(self.add_exhibit_view)
         self.add_exhibit_view.hide()
 
+    # Add continuity entries to the database
     def add_continuity(self):
         new_continuity = Continuity(
             xfer_from = self.add_continuity_view.textbox_xfer_from.text(),
@@ -73,6 +74,7 @@ class Controller:
         self.clear_form(self.add_continuity_view)
         self.add_continuity_view.hide()
 
+    # Look up a row in the database by exhibit number
     def query_by_exhibit_number(self):
         exhibit_to_find = self.add_continuity_view.textbox_continuity_exhibit_number.text()
         exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_to_find).first()
@@ -83,10 +85,12 @@ class Controller:
             self.add_continuity_view.label_confirm_exhibit.setText(f'<b>{exhibit.property_tag} - {exhibit.description}</b>')
         model.session.close()
 
+    # Clear all of the textboxes on GUI window or widget
     def clear_form(self, form):
         for line_edit in form.findChildren(QLineEdit):
             line_edit.clear()
 
+    # Terminate the application
     def close_app(self):
         sys.exit()
 
