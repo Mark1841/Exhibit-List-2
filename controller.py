@@ -1,4 +1,4 @@
-from view import MainWindow, AddExhibitWindow
+from view import MainWindow, AddExhibitWindow, AddContinuityWindow
 from model import Exhibit
 import model
 
@@ -8,16 +8,22 @@ class Controller:
         print('Controller created')
         self.main_view = MainWindow()
         self.add_exhibit_view = AddExhibitWindow()
+        self.add_continuity_view = AddContinuityWindow()
         self.initialise_buttons()
 
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
         self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
+        self.main_view.button_add_continuity.clicked.connect(self.show_add_continuity_form)
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
 
     # Show the add_exhibit window when add exhibit button is clicked
     def show_add_exhibit_form(self):
         self.add_exhibit_view.show()
+
+    # Show the add_continuity window when add exhibit button is clicked
+    def show_add_continuity_form(self):
+        self.add_continuity_view.show()
 
     # Collect data from the add_exhibit_window and add to the database
     def add_exhibit(self):
