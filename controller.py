@@ -1,12 +1,12 @@
-from view import MainWindow, AddExhibitWindow, AddContinuityWindow
-from model import Exhibit
+from view import MainWindow, AddExhibitWindow, AddContinuityWindow, QLineEdit
+from model import Exhibit, Continuity
 import model
-from sqlalchemy import select
+import sys
+
 
 class Controller:
     """ The controller takes care of the application logic """
     def __init__(self):
-        print('Controller created')
         self.main_view = MainWindow()
         self.add_exhibit_view = AddExhibitWindow()
         self.add_continuity_view = AddContinuityWindow()
@@ -14,10 +14,12 @@ class Controller:
 
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
-        self.add_continuity_view.button_exhibit_number_check.clicked.connect(self.query_exhibits)
+        self.add_continuity_view.button_exhibit_number_check.clicked.connect(self.query_by_exhibit_number)
         self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
         self.main_view.button_add_continuity.clicked.connect(self.show_add_continuity_form)
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
+        self.add_continuity_view.button_add_continuity.clicked.connect(self.add_continuity)
+        self.main_view.button_close.clicked.connect(self.close_app)
 
     # Show the add_exhibit window when add exhibit button is clicked
     def show_add_exhibit_form(self):
@@ -50,14 +52,41 @@ class Controller:
         model.session.commit()
         model.session.close()
 
-    def query_exhibits(self):
+        #Clear Line Edit boxes on the form and close window
+        self.clear_form(self.add_exhibit_view)
+        self.add_exhibit_view.hide()
+
+    def add_continuity(self):
+        new_continuity = Continuity(
+            xfer_from = self.add_continuity_view.textbox_xfer_from.text(),
+            xfer_to = self.add_continuity_view.textbox_xfer_to.text(),
+            xfer_date_time = f'{self.add_continuity_view.textbox_xfer_date.text()} - {self.add_continuity_view.textbox_xfer_time.text()}',
+            exhibit_id = self.add_continuity_view.textbox_continuity_exhibit_number.text()
+        )
+
+        # Update the database with continuity and close the session
+        model.session.add(new_continuity)
+        model.session.commit()
+        model.session.close()
+
+        # Clear Line Edit boxes on the form and close window
+        self.clear_form(self.add_continuity_view)
+        self.add_continuity_view.hide()
+
+    def query_by_exhibit_number(self):
         exhibit_to_find = self.add_continuity_view.textbox_continuity_exhibit_number.text()
         exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_to_find).first()
         if exhibit == None:
-            self.add_continuity_view.label_confirm_exhibit.setText('That exhibit is not in the database')
+            self.add_continuity_view.label_confirm_exhibit.setText('<b>That exhibit is not in the database</b>')
             self.add_continuity_view.textbox_continuity_exhibit_number.clear()
         else:
-            self.add_continuity_view.label_confirm_exhibit.setText(f'{exhibit.property_tag} - {exhibit.description}')
+            self.add_continuity_view.label_confirm_exhibit.setText(f'<b>{exhibit.property_tag} - {exhibit.description}</b>')
         model.session.close()
 
-        
+    def clear_form(self, form):
+        for line_edit in form.findChildren(QLineEdit):
+            line_edit.clear()
+
+    def close_app(self):
+        sys.exit()
+

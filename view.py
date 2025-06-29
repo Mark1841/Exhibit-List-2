@@ -130,7 +130,7 @@ class AddContinuityWindow(QWidget):
         self.label_exhibit_number = QLabel('Enter Exhibit Number')
         self.label_confirm_exhibit = QLabel('')
         self.label_xfer_from = QLabel('Transfer from')
-        self.label_xfer_to = QLabel('Transfer from')
+        self.label_xfer_to = QLabel('Transfer to')
         self.label_xfer_date = QLabel('Transfer Date')
         self.label_xfer_time = QLabel('Transfer Time')
         # Line Edit Boxes
