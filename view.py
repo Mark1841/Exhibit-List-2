@@ -26,13 +26,17 @@ class MainWindow(QMainWindow):
         self.button_view_exhibits = QPushButton('View Exhibits')
         self.button_close = QPushButton('Close')
 
+        # Create database info section
+        self.label_exhibits_total = QLabel('<b>Total Exhibits:</b>')
+        self.label_exhibits_count = QLabel()
+
+        # Create Exhibit information section
         # Row 1
         self.label_exhibit_number = QLabel('Exhibit #: ')
         self.textbox_exhibit_number = QLineEdit()
         self.button_get_exhibit = QPushButton('Get')
         self.button_update = QPushButton('Update')
         self.button_clear = QPushButton('Clear')
-
         # Row 2
         self.label_property_tag = QLabel('Property Tag')
         self.textbox_property_tag = QLineEdit()
@@ -42,43 +46,35 @@ class MainWindow(QMainWindow):
         self.textbox_seal_date = QLineEdit()
         self.label_seal_time = QLabel('Time')
         self.textbox_seal_time = QLineEdit()
-
         # Row 3
         self.label_description = QLabel('Description: ')
         self.textbox_description = QLineEdit()
-
         # Row 4
         self.label_location = QLabel('Location')
         self.textbox_location = QLineEdit()
-
         # Row 5
         self.label_seized_from = QLabel('Seized From: ')
         self.textbox_seized_from = QLineEdit()
         self.label_seized_date = QLabel('Seized Date: ')
         self.textbox_seized_date = QLineEdit()
-
         # Row 6
         self.label_seized_by = QLabel('Seized by: ')
         self.textbox_seized_by = QLineEdit()
         self.label_seized_time = QLabel('Seized Time: ')
         self.textbox_seized_time = QLineEdit()
-
         # Row 7
         self.label_photo_number = QLabel('Photograph Number: ')       
         self.textbox_photo_number = QLineEdit()
         self.label_placard_number = QLabel('Placard Number: ')
         self.textbox_placard_number = QLineEdit()
-        self.label_cfs_number = QLabel('Placard Number: ')
+        self.label_cfs_number = QLabel('CFS Number: ')
         self.textbox_cfs_number = QLineEdit()
-
         # Row 8
         self.label_note = QLabel('Note: ')
         self.textbox_note = QLineEdit()
         self.button_add_note = QPushButton('Add Note')
-
         # Row 9
         self.textedit_notes = QTextEdit()
-
         # Row 10
         self.label_continuity = QLabel('<b>   -----        Continuity        -----   </b>')
         self.label_xfer_from = QLabel('From: ')
@@ -90,19 +86,21 @@ class MainWindow(QMainWindow):
         self.label_xfer_time = QLabel('Time: ')
         self.textbox_xfer_time = QLineEdit()
         self.button_add_continuity = QPushButton('Add Continuity')
-
         # Row 11
         self.textedit_continuity = QTextEdit()
 
         # Set variable for labels to align to the right
         rightalign = Qt.AlignmentFlag.AlignRight
 
-        # Add  buttons to vertical layout
+        # Add  widgets to grid layout
+        # Widget(row, column, rowspan, columnspan, alignment)
         mainwindow_layout = QGridLayout()
         mainwindow_layout.addWidget(self.button_add_exhibit,0,0)
         mainwindow_layout.addWidget(self.button_delete_exhibit,1,0)
         mainwindow_layout.addWidget(self.button_view_exhibits,2, 0)
         mainwindow_layout.addWidget(self.button_close,3,0)
+        mainwindow_layout.addWidget(self.label_exhibits_total)
+        mainwindow_layout.addWidget(self.label_exhibits_count)
         mainwindow_layout.addWidget(self.label_property_tag,0,1,1,1,rightalign)
         mainwindow_layout.addWidget(self.textbox_property_tag,0,2)
         mainwindow_layout.addWidget(self.button_get_exhibit,0,4)

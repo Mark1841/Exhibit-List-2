@@ -12,15 +12,20 @@ class Controller:
         self.delete_exhibit_view = DeleteExhibitWindow()
         self.initialise_buttons()
 
+        self.main_view.label_exhibits_count.setText(str(self.count_exhibits)) #This is not working properly and I dont know why!!!!
+
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
-        self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
+        # Main menu buttons
+        self.main_view.button_add_exhibit.clicked.connect(lambda: self.add_exhibit_view.show())
+        self.main_view.button_delete_exhibit.clicked.connect(lambda: self.delete_exhibit_view.show())
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
-        self.main_view.button_close.clicked.connect(self.close_app)
+        self.main_view.button_close.clicked.connect(lambda: sys.exit())
+
+        # Exhibit form buttons
         self.main_view.button_get_exhibit.clicked.connect(self.query_by_property_tag)
         self.main_view.button_add_continuity.clicked.connect(self.add_continuity)
-        #self.main_view.button_clear.clicked.connect(self.clear_form(self.main_view))
-        self.main_view.button_delete_exhibit.clicked.connect(self.show_delete_exhibit_form)
+
 
         # linking cancel buttons
         self.add_exhibit_view.button_add_exhibit_cancel.clicked.connect(self.cancel_add_exhibit)
@@ -30,14 +35,6 @@ class Controller:
         self.delete_exhibit_view.button_delete_exhibit.clicked.connect(self.find_exhibit_for_delete)
         self.delete_exhibit_view.button_confirm_delete.clicked.connect(self.confirm_deletion)
 
-
-    # Show the add_exhibit window when add exhibit button is clicked
-    def show_add_exhibit_form(self):
-        self.add_exhibit_view.show()
-
-    # Show the delete_exhibit window when delete exhibit button is clicked
-    def show_delete_exhibit_form(self):
-        self.delete_exhibit_view.show()
     
     # Cancel buttons
     def cancel_add_exhibit(self):
@@ -126,7 +123,6 @@ class Controller:
         self.main_view.textbox_xfer_date.clear()
         self.main_view.textbox_xfer_time.clear()
 
-
     # Look up a row in the database by property tag and populate textboxes
     def query_by_property_tag(self):
         exhibit_to_find = self.main_view.textbox_property_tag.text()
@@ -146,7 +142,10 @@ class Controller:
         for line_edit in form.findChildren(QLineEdit):
             line_edit.clear()
 
-    # Terminate the application
-    def close_app(self):
-        sys.exit()
+    # Count the number of exhibits in the database - *** Bug issue created for Ethan ***
+    def count_exhibits(self):
+        exhibit_count =  model.session.query(Exhibit).count()
+        model.session.close()
+        print(exhibit_count)
+        return exhibit_count
 
