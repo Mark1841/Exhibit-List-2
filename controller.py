@@ -1,4 +1,4 @@
-from view import MainWindow, AddExhibitWindow, AddContinuityWindow, QLineEdit
+from view import MainWindow, AddExhibitWindow, AddContinuityWindow, DeleteExhibitWindow, QLineEdit
 from model import Exhibit, Continuity
 import model
 import sys
@@ -10,6 +10,7 @@ class Controller:
         self.main_view = MainWindow()
         self.add_exhibit_view = AddExhibitWindow()
         self.add_continuity_view = AddContinuityWindow()
+        self.delete_exhibit_view = DeleteExhibitWindow()
         self.initialise_buttons()
 
     # Attach methods to buttons from the view class
@@ -20,6 +21,17 @@ class Controller:
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
         self.add_continuity_view.button_add_continuity.clicked.connect(self.add_continuity)
         self.main_view.button_close.clicked.connect(self.close_app)
+        self.main_view.button_delete_exhibit.clicked.connect(self.show_delete_exhibit_form)
+
+        # linking cancel buttons
+        self.add_exhibit_view.button_add_exhibit_cancel.clicked.connect(self.cancel_add_exhibit)
+        self.add_continuity_view.button_add_continuity_cancel.clicked.connect(self.cancel_add_continuity)
+        self.delete_exhibit_view.button_cancel_delete.clicked.connect(self.cancel_delete)
+
+        # linking delete button
+        self.delete_exhibit_view.button_delete_exhibit.clicked.connect(self.find_exhibit_for_delete)
+        self.delete_exhibit_view.button_confirm_delete.clicked.connect(self.confirm_deletion)
+
 
     # Show the add_exhibit window when add exhibit button is clicked
     def show_add_exhibit_form(self):
@@ -28,6 +40,54 @@ class Controller:
     # Show the add_continuity window when add exhibit button is clicked
     def show_add_continuity_form(self):
         self.add_continuity_view.show()
+
+    # Show the delete_exhibit window when delete exhibit button is clicked
+    def show_delete_exhibit_form(self):
+        self.delete_exhibit_view.show()
+    
+    # Cancel buttons
+    def cancel_add_exhibit(self):
+        self.clear_form(self.add_exhibit_view)
+        self.add_exhibit_view.hide()
+
+    def cancel_add_continuity(self):
+        self.clear_form(self.add_continuity_view)
+        self.add_continuity_view.hide()
+
+    def cancel_delete(self):
+        self.clear_form(self.delete_exhibit_view)
+        self.delete_exhibit_view.hide()
+
+    # Delete button
+    def find_exhibit_for_delete(self):
+        exhibit_number = self.delete_exhibit_view.textbox_exhibit_number.text()
+        # Simple query to find the exhibit in the database by the exhibit number 
+        # also grabs the first result of said query
+        exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_number).first()
+        if exhibit is None:
+            self.delete_exhibit_view.label_exhibit_info.setText("<b>Exhibit not found</b>")
+        else:
+            info = (
+                f"<b>Property Tag:</b> {exhibit.property_tag}<br>"
+                f"<b>Description:</b> {exhibit.description}<br>"
+                f"<b>Location:</b> {exhibit.location}<br>"
+                f"<b>Seized From:</b> {exhibit.seized_from}<br>"
+                f"<b>Seized By:</b> {exhibit.seized_by}<br>"
+            )
+            self.delete_exhibit_view.label_exhibit_info.setText(info)
+
+    # Actually deletes the exhibit from the database
+    def confirm_deletion(self):
+        exhibit_number = self.delete_exhibit_view.textbox_exhibit_number.text()
+        exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_number).first()
+
+        if exhibit is None:
+            self.delete_exhibit_view.label_exhibit_info.setText("<b>Exhibit not found</b>")
+        else:
+            model.session.delete(exhibit)
+            model.session.commit()
+            self.delete_exhibit_view.label_exhibit_info.setText("<b>Exhibit has been deleted!</b>")
+            self.clear_form(self.delete_exhibit_view)
 
     # Collect data from the add_exhibit_window and add to the database
     def add_exhibit(self):

@@ -157,3 +157,37 @@ class AddContinuityWindow(QWidget):
 
         # Set the layout for the widget
         self.setLayout(add_continuity_layout)
+
+# Delete Exhibit widgit code
+class DeleteExhibitWindow(QWidget):
+    """ This method creates the delete exhibit widget """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Set the main window
+        self.setWindowTitle('Delete Exhibit')
+        self.setStyleSheet("QPushButton {min-Width: 100px; min-height: 40px; }")
+
+        # Top: Enter your information
+        self.label_exhibit_number = QLabel('Exhibit Number You Wish to Delete')
+        self.textbox_exhibit_number = QLineEdit()
+        self.button_delete_exhibit = QPushButton('Delete Exhibit')
+
+        # Middle: Displaying the exhibit information
+        self.label_exhibit_info = QLabel('Exhibit Information')
+        self.label_exhibit_info.setWordWrap(True)
+
+        # Bottom: Confirm or Cancel
+        self.button_confirm_delete = QPushButton("Confirm deletion")
+        self.button_cancel_delete = QPushButton("Cancel deletion")
+        
+
+        # Layout
+        delete_exhibit_layout = QFormLayout()
+        delete_exhibit_layout.addRow(self.label_exhibit_number, self.textbox_exhibit_number)
+        delete_exhibit_layout.addRow(self.button_delete_exhibit)
+        delete_exhibit_layout.addRow(QLabel('Exhibit Info:'))
+        delete_exhibit_layout.addRow(self.label_exhibit_info)
+        delete_exhibit_layout.addRow(self.button_confirm_delete, self.button_cancel_delete)
+
+        self.setLayout(delete_exhibit_layout)
