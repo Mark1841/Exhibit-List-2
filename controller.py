@@ -19,12 +19,11 @@ class Controller:
         self.main_view.button_close.clicked.connect(self.close_app)
         self.main_view.button_get_exhibit.clicked.connect(self.query_by_property_tag)
         self.main_view.button_add_continuity.clicked.connect(self.add_continuity)
-        self.main_view.button_clear.clicked.connect(self.clear_form(self.main_view))
+        #self.main_view.button_clear.clicked.connect(self.clear_form(self.main_view))
         self.main_view.button_delete_exhibit.clicked.connect(self.show_delete_exhibit_form)
 
         # linking cancel buttons
         self.add_exhibit_view.button_add_exhibit_cancel.clicked.connect(self.cancel_add_exhibit)
-        self.add_continuity_view.button_add_continuity_cancel.clicked.connect(self.cancel_add_continuity)
         self.delete_exhibit_view.button_cancel_delete.clicked.connect(self.cancel_delete)
 
         # linking delete button
@@ -44,10 +43,6 @@ class Controller:
     def cancel_add_exhibit(self):
         self.clear_form(self.add_exhibit_view)
         self.add_exhibit_view.hide()
-
-    def cancel_add_continuity(self):
-        self.clear_form(self.add_continuity_view)
-        self.add_continuity_view.hide()
 
     def cancel_delete(self):
         self.clear_form(self.delete_exhibit_view)
