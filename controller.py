@@ -16,7 +16,6 @@ class Controller:
     def initialise_buttons(self):
         self.add_continuity_view.button_exhibit_number_check.clicked.connect(self.query_by_exhibit_number)
         self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
-        self.main_view.button_add_continuity.clicked.connect(self.show_add_continuity_form)
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
         self.add_continuity_view.button_add_continuity.clicked.connect(self.add_continuity)
         self.main_view.button_close.clicked.connect(self.close_app)
