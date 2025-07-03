@@ -1,4 +1,4 @@
-from view import MainWindow, AddExhibitWindow, AddContinuityWindow, QLineEdit
+from view import MainWindow, AddExhibitWindow, QLineEdit
 from model import Exhibit, Continuity
 import model
 import sys
@@ -9,24 +9,20 @@ class Controller:
     def __init__(self):
         self.main_view = MainWindow()
         self.add_exhibit_view = AddExhibitWindow()
-        self.add_continuity_view = AddContinuityWindow()
         self.initialise_buttons()
 
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
-        self.add_continuity_view.button_exhibit_number_check.clicked.connect(self.query_by_exhibit_number)
         self.main_view.button_add_exhibit.clicked.connect(self.show_add_exhibit_form)
         self.add_exhibit_view.button_add_exhibit_okay.clicked.connect(self.add_exhibit)
-        self.add_continuity_view.button_add_continuity.clicked.connect(self.add_continuity)
         self.main_view.button_close.clicked.connect(self.close_app)
+        self.main_view.button_get_exhibit.clicked.connect(self.query_by_property_tag)
+        self.main_view.button_add_continuity.clicked.connect(self.add_continuity)
+        self.main_view.button_clear.clicked.connect(self.clear_form(self.main_view))
 
     # Show the add_exhibit window when add exhibit button is clicked
     def show_add_exhibit_form(self):
         self.add_exhibit_view.show()
-
-    # Show the add_continuity window when add exhibit button is clicked
-    def show_add_continuity_form(self):
-        self.add_continuity_view.show()
 
     # Collect data from the add_exhibit_window and add to the database
     def add_exhibit(self):
@@ -58,10 +54,10 @@ class Controller:
     # Add continuity entries to the database
     def add_continuity(self):
         new_continuity = Continuity(
-            xfer_from = self.add_continuity_view.textbox_xfer_from.text(),
-            xfer_to = self.add_continuity_view.textbox_xfer_to.text(),
-            xfer_date_time = f'{self.add_continuity_view.textbox_xfer_date.text()} - {self.add_continuity_view.textbox_xfer_time.text()}',
-            exhibit_id = self.add_continuity_view.textbox_continuity_exhibit_number.text()
+            xfer_from = self.main_view.textbox_xfer_from.text(),
+            xfer_to = self.main_view.textbox_xfer_to.text(),
+            xfer_date_time = f'{self.main_view.textbox_xfer_date.text()} - {self.main_view.textbox_xfer_time.text()}',
+            exhibit_id = self.main_view.textbox_exhibit_number.text()
         )
 
         # Update the database with continuity and close the session
@@ -69,19 +65,25 @@ class Controller:
         model.session.commit()
         model.session.close()
 
-        # Clear Line Edit boxes on the form and close window
-        self.clear_form(self.add_continuity_view)
-        self.add_continuity_view.hide()
+        # Clear the add continuity text boxes
+        self.main_view.textbox_xfer_from.clear()
+        self.main_view.textbox_xfer_to.clear()
+        self.main_view.textbox_xfer_date.clear()
+        self.main_view.textbox_xfer_time.clear()
 
-    # Look up a row in the database by exhibit number
-    def query_by_exhibit_number(self):
-        exhibit_to_find = self.add_continuity_view.textbox_continuity_exhibit_number.text()
-        exhibit = model.session.query(Exhibit).filter_by(exhibit_number=exhibit_to_find).first()
+
+    # Look up a row in the database by property tag and populate textboxes
+    def query_by_property_tag(self):
+        exhibit_to_find = self.main_view.textbox_property_tag.text()
+        exhibit = model.session.query(Exhibit).filter_by(property_tag=exhibit_to_find).first()
         if exhibit == None:
-            self.add_continuity_view.label_confirm_exhibit.setText('<b>That exhibit is not in the database</b>')
-            self.add_continuity_view.textbox_continuity_exhibit_number.clear()
+            # Display a dialog box saying exhibit not found
+            self.main_view.textbox_property_tag.clear()
         else:
-            self.add_continuity_view.label_confirm_exhibit.setText(f'<b>{exhibit.property_tag} - {exhibit.description}</b>')
+            pass
+            # populate the main_view with all of the exhibit information
+            self.main_view.textbox_exhibit_number.setText(str(exhibit.exhibit_number))
+            self.main_view.textbox_seal.setText(str(exhibit.seal_number))
         model.session.close()
 
     # Clear all of the textboxes on GUI window or widget
