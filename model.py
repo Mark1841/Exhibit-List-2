@@ -39,6 +39,15 @@ class Continuity(Base):
     exhibit_id = Column(Integer, ForeignKey('exhibits.id'))
     exhibits = relationship("Exhibit", back_populates="continuities")
 
+# Define Database Information Table
+class DatabaseInfo(Base):
+    """ This class creates the database information data model and links to the database_info table """
+    __tablename__ = "database_info"
+    id = Column(Integer, primary_key=True)
+    project_name = Column(String, unique=True)
+    incident_number = Column(String)
+    last_updated = Column(String)
+
 
 # Database set up
 engine = create_engine('sqlite:///exhibitList.db', echo = False)
