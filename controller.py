@@ -1,4 +1,5 @@
 from view import MainWindow, AddExhibitWindow, DeleteExhibitWindow, QLineEdit
+from PyQt6.QtWidgets import QMessageBox
 from model import Exhibit, Continuity
 import model
 import sys
@@ -127,14 +128,37 @@ class Controller:
     def query_by_property_tag(self):
         exhibit_to_find = self.main_view.textbox_property_tag.text()
         exhibit = model.session.query(Exhibit).filter_by(property_tag=exhibit_to_find).first()
+        print(exhibit)
+
         if exhibit == None:
             # Display a dialog box saying exhibit not found
-            self.main_view.textbox_property_tag.clear()
+            not_found_message = QMessageBox()
+            not_found_message.setWindowTitle("Exhibit Not Found")
+            not_found_message.setText(f"Exhibit with property tag '{exhibit_to_find}' not found.")
+            not_found_message.setIcon(QMessageBox.Icon.Warning)
+            not_found_message.exec()
+
+            self.clear_form(self.main_view)
         else:
-            pass
             # populate the main_view with all of the exhibit information
             self.main_view.textbox_exhibit_number.setText(str(exhibit.exhibit_number))
             self.main_view.textbox_seal.setText(str(exhibit.seal_number))
+            self.main_view.textbox_cfs_number.setText(str(exhibit.cfs_number))
+            self.main_view.textbox_placard_number.setText(str(exhibit.placard_number))
+            self.main_view.textbox_description.setText(str(exhibit.description))
+            self.main_view.textbox_location.setText(str(exhibit.location))
+            self.main_view.textbox_photo_number.setText(str(exhibit.photograph_number))
+            self.main_view.textbox_seized_from.setText(str(exhibit.seized_from))
+            self.main_view.textbox_seized_by.setText(str(exhibit.seized_by))
+
+            # These cause issues if the date and time are not in the correct format
+            # Needs fixing
+            self.main_view.textbox_seized_time.setText(str(exhibit.seized_date_time.split()[1]))
+            self.main_view.textbox_seized_date.setText(str(exhibit.seized_date_time.split()[0]))
+            self.main_view.textbox_seal_time.setText(str(exhibit.seal_date_time.split()[1]))
+            self.main_view.textbox_seal_date.setText(str(exhibit.seal_date_time.split()[0]))
+
+
         model.session.close()
 
     # Clear all of the textboxes on GUI window or widget
