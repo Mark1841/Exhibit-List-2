@@ -13,7 +13,7 @@ class Controller:
         self.delete_exhibit_view = DeleteExhibitWindow()
         self.initialise_buttons()
 
-        self.main_view.label_exhibits_count.setText(str(self.count_exhibits)) #This is not working properly and I dont know why!!!!
+        self.main_view.label_exhibits_count.setText(str(self.count_exhibits())) #This is not working properly and I dont know why!!!!
 
     # Attach methods to buttons from the view class
     def initialise_buttons(self):
@@ -151,12 +151,24 @@ class Controller:
             self.main_view.textbox_seized_from.setText(str(exhibit.seized_from))
             self.main_view.textbox_seized_by.setText(str(exhibit.seized_by))
 
-            # These cause issues if the date and time are not in the correct format
-            # Needs fixing
-            self.main_view.textbox_seized_time.setText(str(exhibit.seized_date_time.split()[1]))
-            self.main_view.textbox_seized_date.setText(str(exhibit.seized_date_time.split()[0]))
-            self.main_view.textbox_seal_time.setText(str(exhibit.seal_date_time.split()[1]))
-            self.main_view.textbox_seal_date.setText(str(exhibit.seal_date_time.split()[0]))
+            # Now fixed
+            # Check if the seized_date_time is None or empty and split it into date and time
+            # If it is None or empty, set the textboxes to "N/A"
+            try:
+                date, time = exhibit.seized_date_time.split()
+                self.main_view.textbox_seized_date.setText(str(date))
+                self.main_view.textbox_seized_time.setText(str(time))
+            except Exception:
+                self.main_view.textbox_seized_date.setText("N/A")
+                self.main_view.textbox_seized_time.setText("N/A")
+
+            try:
+                date, time = exhibit.seal_date_time.split()
+                self.main_view.textbox_seal_date.setText(str(date))
+                self.main_view.textbox_seal_time.setText(str(time))
+            except Exception:
+                self.main_view.textbox_seal_date.setText("N/A")
+                self.main_view.textbox_seal_time.setText("N/A")
 
 
         model.session.close()
@@ -169,7 +181,6 @@ class Controller:
     # Count the number of exhibits in the database - *** Bug issue created for Ethan ***
     def count_exhibits(self):
         exhibit_count =  model.session.query(Exhibit).count()
-        model.session.close()
-        print(exhibit_count)
+        model.session.close()        
         return exhibit_count
 
